@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Product } from "../models/product.models";
+import * as productService from "../services/product.service";
 
 export const getAllProducts = async (_: Request, res: Response) => {
   try {
-    const products = await Product.find();
+    const products = await productService.getAllProducts();
     res.send(products);
   } catch (err) {
     console.error(err);
@@ -14,7 +14,7 @@ export const getAllProducts = async (_: Request, res: Response) => {
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const product = await Product.findById(id);
+    const product = await productService.getProductById(id);
     if (!product) {
       return res.status(404).send("Product not found");
     }
@@ -27,14 +27,8 @@ export const getProductById = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const product = new Product({
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
-    });
-    const savedProduct = await product.save();
-    res.json(savedProduct);
+    const product = await productService.createProduct(req.body);
+    res.json(product);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
@@ -44,23 +38,17 @@ export const createProduct = async (req: Request, res: Response) => {
 export const updateProductById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const newName = req.body.name;
-    const newDescription = req.body.description;
-    const newPrice = req.body.price;
-    const newCategory = req.body.category;
-    const updatedProduct = await Product.findByIdAndUpdate(
+    const updateData = req.body;
+
+    const updatedProduct = await productService.updateProductById(
       id,
-      {
-        name: newName,
-        description: newDescription,
-        price: newPrice,
-        category: newCategory,
-      },
-      { new: true }
+      updateData
     );
+
     if (!updatedProduct) {
       return res.status(404).send("Product not found");
     }
+
     res.json(updatedProduct);
   } catch (err) {
     console.error(err);
@@ -71,7 +59,7 @@ export const updateProductById = async (req: Request, res: Response) => {
 export const deleteProductById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const deletedProduct = await Product.findByIdAndDelete(id);
+    const deletedProduct = await productService.deleteProductById(id);
     if (!deletedProduct) {
       return res.status(404).send("Product not found");
     }
