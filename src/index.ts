@@ -5,6 +5,7 @@ import corsMiddleware from "./middlewares/cors.middleware";
 
 import productRouter from "./routes/product.routes";
 import orderRouter from "./routes/order.routes";
+import authRouter from "./routes/auth.routes";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -19,6 +20,7 @@ app.use(corsMiddleware);
 // Routes
 app.use(productRouter);
 app.use(orderRouter);
+app.use(authRouter);
 
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
