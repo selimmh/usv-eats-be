@@ -1,4 +1,5 @@
 import { Product, IProduct } from "../models/product.models";
+import { productSchemaYup } from "../models/product.models";
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
   const products = await Product.find();
@@ -13,6 +14,7 @@ export const getProductById = async (id: string): Promise<any | null> => {
 export const createProduct = async (
   productData: IProduct
 ): Promise<IProduct> => {
+  await productSchemaYup.validate(productData, { abortEarly: false });
   const product = new Product({
     name: productData.name,
     description: productData.description,

@@ -1,6 +1,8 @@
 import { Order, IOrder } from "../models/order.model";
+import { orderSchemaYup } from "../models/order.model";
 
 export const createOrder = async (orderData: IOrder): Promise<IOrder> => {
+  await orderSchemaYup.validate(orderData, { abortEarly: false });
   const order = new Order({
     userId: orderData.userId,
     total: orderData.total,
@@ -22,6 +24,6 @@ export const getOrders = async (): Promise<IOrder[]> => {
 };
 
 export const getOrdersByUserId = async (userId: string): Promise<IOrder[]> => {
-  const orders = await Order.find({ userId });
-  return orders;
+  const products = Order.find({ userId: userId });
+  return products;
 };

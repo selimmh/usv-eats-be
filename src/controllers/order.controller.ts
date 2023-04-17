@@ -23,7 +23,8 @@ export const getOrders = async (_: Request, res: Response) => {
 
 export const getOrdersByUserId = async (req: Request, res: Response) => {
   try {
-    const products = await orderService.getOrdersByUserId(req.params.userId);
+    const userId = req.params.userId;
+    const products = await orderService.getOrdersByUserId(userId);
     res.json(products);
   } catch (err) {
     console.error(err);

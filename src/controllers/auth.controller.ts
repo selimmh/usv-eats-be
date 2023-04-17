@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { createUser, getUserByEmail } from "../services/auth.service";
+import {
+  createUser,
+  getUserByEmail,
+  getCurrentUserWithToken,
+} from "../services/auth.service";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signUp = async (req: Request, res: Response) => {
@@ -32,6 +36,20 @@ export const login = async (req: Request, res: Response) => {
     }
     const token = jwt.sign({ id: user._id }, JWT_SECRET as string);
     res.json({ user, token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const currentUser = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body;
+    const user = await getCurrentUserWithToken(token);
+    if (!user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    res.json({ user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

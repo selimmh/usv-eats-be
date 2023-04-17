@@ -1,5 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
+import * as yup from "yup";
+
+export const userSchemaYup = yup.object({
+  email: yup.string().email().required(),
+  password: yup.string().min(6).required(),
+});
 
 export interface IUser extends Document {
   email: string;
