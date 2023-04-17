@@ -6,6 +6,7 @@ import corsMiddleware from "./middlewares/cors.middleware";
 import productRouter from "./routes/product.routes";
 import orderRouter from "./routes/order.routes";
 import authRouter from "./routes/auth.routes";
+import authMiddleware from "./middlewares/auth.middleware";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -17,10 +18,15 @@ dbConnect();
 app.use(jsonParserMiddleware);
 app.use(corsMiddleware);
 
+// Route without auth middleware
+app.use(authRouter);
+
+// Auth middleware
+app.use(authMiddleware);
+
 // Routes
 app.use(productRouter);
 app.use(orderRouter);
-app.use(authRouter);
 
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

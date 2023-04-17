@@ -5,15 +5,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const signUp = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
     }
-    const user = await createUser(name, email, password);
-    const token = jwt.sign({ id: user._id }, JWT_SECRET as string, {
-      expiresIn: "1h",
-    });
+    const user = await createUser(email, password);
+    const token = jwt.sign({ id: user._id }, JWT_SECRET as string);
     res.json({ user, token });
   } catch (error) {
     console.error(error);
@@ -21,7 +19,7 @@ export const signUp = async (req: Request, res: Response) => {
   }
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const user = await getUserByEmail(email);

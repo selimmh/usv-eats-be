@@ -1,11 +1,10 @@
 import { User, IUser } from "../models/user.model";
 
 export const createUser = async (
-  name: string,
   email: string,
   password: string
 ): Promise<IUser> => {
-  const user = await User.create({ name, email, password });
+  const user = await User.create({ email, password });
   return user;
 };
 
