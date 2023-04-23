@@ -20,6 +20,8 @@ export const getCurrentUserWithToken = async (
   token: string
 ): Promise<IUser | null> => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as IUser;
-  const user = await User.findById(decoded._id);
+  console.log("decoded", decoded);
+  const user = await User.findById(decoded.id);
+  console.log("user", user);
   return user;
 };

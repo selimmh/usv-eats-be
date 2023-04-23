@@ -2,9 +2,12 @@ import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import * as yup from "yup";
 
+export type Roles = "user" | "admin" | "staff";
+
 export const userSchemaYup = yup.object({
   email: yup.string().email().required(),
   password: yup.string().min(6).required(),
+  role: yup.string().oneOf(["user", "admin"]),
 });
 
 export interface IUser extends Document {
@@ -16,6 +19,7 @@ export interface IUser extends Document {
 const userSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, default: "user" },
 });
 
 userSchema.pre<IUser>("save", async function (next) {

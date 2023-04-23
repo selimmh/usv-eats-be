@@ -7,7 +7,7 @@ import {
 } from "../services/auth.service";
 const JWT_SECRET = process.env.JWT_SECRET;
 
-export const signUp = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const existingUser = await getUserByEmail(email);
@@ -44,8 +44,9 @@ export const login = async (req: Request, res: Response) => {
 
 export const currentUser = async (req: Request, res: Response) => {
   try {
-    const { token } = req.body;
-    const user = await getCurrentUserWithToken(token);
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    console.log("token here", token);
+    const user = await getCurrentUserWithToken(token as string);
     if (!user) {
       return res.status(401).json({ message: "Invalid token" });
     }
